@@ -1,0 +1,80 @@
+package com.example.ItProject.models;
+
+import com.example.ItProject.models.Player;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "game")
+public class Game {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    private Long id;
+
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @Getter
+    private List<Player> players;
+
+    @ElementCollection
+    @Getter
+    private List<String> board;
+
+    @Column(name = "board_size")
+    @Getter
+    private int boardSize;
+
+    @Getter
+    private boolean isGameOver;
+
+    @Getter
+    private int movesLeft;
+
+    @Getter
+    private int currentPlayerIndex;
+
+    @Getter
+    private String winner;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public void setBoard(List<String> board) {
+        this.board = board;
+    }
+
+    public void setBoardSize(int size) {
+        this.boardSize = size;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+
+    public void setIsGameOver(boolean gameOver) {
+        isGameOver = gameOver;
+    }
+
+    public void setMovesLeft(int movesLeft) {
+        this.movesLeft = movesLeft;
+    }
+
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        this.currentPlayerIndex = currentPlayerIndex;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
+    }
+}

@@ -1,0 +1,18 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=jdbc
+      - MYSQL_USER=jdbc
+      - MYSQL_PASSWORD=irakli
+      - MYSQL_ROOT_PASSWORD=irakli
+      - MYSQL_CHARSET=utf8mb4
+      - MYSQL_COLLATION=utf8mb4_general_ci
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - 3311:3306
+volumes:
+  db_data:

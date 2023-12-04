@@ -7,7 +7,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.cert.Extension;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -22,19 +24,20 @@ public class GameService {
     }
 
   public Long createNewGame(){
-        Game newGame = new Game();
-   newGame.setBoardSize(20);
-
-   List<String> initialBoard = new ArrayList<>();
-
-   newGame.setBoard(initialBoard);
-      newGame.setIsGameOver(false);
-      newGame.setMovesLeft(400);
-
-      Game savedGame = gameRepository.save(newGame);
-
-      return savedGame.getId();
+    return createNewGameWithSize(20);
   }
+public Long createNewGameWithSize(int size){
+        Game newGame = new Game();
+        newGame.setBoardSize(size);
+
+        List<String> initialBoard = new ArrayList<>(Collections.nCopies(size *size, ""));
+        newGame.setBoard(initialBoard);
+        newGame.setIsGameOver(false);
+        newGame.setMovesLeft(size*size);
+     Game savedGame = gameRepository.save(newGame);
+    return savedGame.getId();
+    }
+
 
   public void makeMove(Long gameId, int row, int column){
       Game game = gameRepository.findById(gameId)
@@ -52,6 +55,9 @@ public class GameService {
           }
 
           game.setMovesLeft(game.getMovesLeft() - 1);
+          if(game.getMovesLeft() == game.getBoardSize() * game.getBoardSize() - 20 ){
+              increaseBoardSize(gameId);
+          }
           gameRepository.save(game);
       }else{
           throw new IllegalArgumentException("Invalid move: cell already occupied!");
@@ -111,5 +117,24 @@ public class GameService {
 
   public Game getGameById(Long gameId){
         return gameRepository.findById(gameId).orElseThrow(() -> new EntityNotFoundException("Game not found"));
+  }
+
+  private void increaseBoardSize(Long gameId){
+        Game game = gameRepository.findById(gameId).
+                orElseThrow(() -> new EntityNotFoundException("game not found"));
+
+        int newSize  = game.getBoardSize() * 2;
+        List<String> enlargedBoard = new ArrayList<>(Collections.nCopies(newSize *newSize, ""));
+        game.setBoard(enlargedBoard);
+        gameRepository.save(game);
+  }
+
+
+  public void deleteGameById(Long id){
+         gameRepository.deleteById(id);
+  }
+
+  public void deleteAll(){
+        gameRepository.deleteAll();
   }
 }

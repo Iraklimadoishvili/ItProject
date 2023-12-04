@@ -5,6 +5,7 @@ import com.example.ItProject.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("/games")
@@ -19,8 +20,11 @@ public class GameController {
     }
 
     @GetMapping("/game")
-    public String gamePage() {
-        return "game";
+    public ModelAndView gamePage() {
+      ModelAndView modelAndView = new ModelAndView();
+      modelAndView.setViewName("game");
+
+      return modelAndView;
     }
 
 
@@ -38,4 +42,14 @@ public class GameController {
     public Game getGameById(@PathVariable Long gameId){
         return gameService.getGameById(gameId);
     }
+
+    @DeleteMapping("/delete/{id}")
+
+    public void deleteGameById(@PathVariable Long id){
+     gameService.deleteGameById(id);
+    }
+@DeleteMapping("/delete")
+    public void deleteAll(){
+        gameService.deleteAll();
+}
 }

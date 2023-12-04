@@ -7,6 +7,7 @@ const startBtn = document.getElementById('startGame');
 Player1.addEventListener('input', handleInputChange);
 Player2.addEventListener('input', handleInputChange);
 
+ let gameId;
 function handleInputChange() {
     const player1name = Player1.value.trim();
     const player2name = Player2.value.trim();
@@ -17,13 +18,7 @@ function handleInputChange() {
     startBtn.disabled = !(!readyBtn1.disabled && !readyBtn2.disabled);
 }
 
-readyBtn1.addEventListener('click', () => {
-    savePlayerName(Player1.value.trim());
-});
 
-readyBtn2.addEventListener('click', () => {
-    savePlayerName(Player2.value.trim());
-});
 
 function savePlayerName(playerName, gameId) {
     const color = generateRandomColor();
@@ -35,7 +30,7 @@ function savePlayerName(playerName, gameId) {
         color: color
     };
 
-    fetch(`/players/${gameId}/add`, {
+    fetch(`/players/add`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -73,20 +68,27 @@ startBtn.addEventListener('click', () => {
     })
         .then(response => {
             if (response.ok) {
-                console.log('Game created successfully!');
                 return response.json();
             } else {
                 throw new Error('Failed to create game!');
             }
         })
         .then(data => {
-
             console.log('Game ID:', data.id);
+            gameId = data.id;
 
-            window.location.href = 'game/game';
+            window.location.href = 'games/game';
         })
         .catch(error => {
             console.error('Error creating game:', error);
-
         });
 });
+
+readyBtn1.addEventListener('click', () => {
+    savePlayerName(Player1.value.trim());
+});
+
+readyBtn2.addEventListener('click', () => {
+    savePlayerName(Player2.value.trim());
+});
+

@@ -6,6 +6,9 @@ import com.example.ItProject.models.Game;
 import com.example.ItProject.models.Player;
 import com.example.ItProject.repositories.GameRepository;
 import com.example.ItProject.repositories.PlayerRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.action.internal.EntityActionVetoException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,15 +28,12 @@ public class PlayerService {
         this.gameRepository = gameRepository;
     }
 
-    public Player addPlayer(@org.jetbrains.annotations.NotNull PlayerDTO playerDTO, Long gameId) {
+    public Player addPlayer(@NotNull PlayerDTO playerDTO) {
         Player player = new Player();
         player.setName(playerDTO.getName());
         player.setColor(playerDTO.getColor());
         player.setTimeSpent(playerDTO.getTimeSpent());
-
-        Optional<Game> optionalGame = gameRepository.findById(gameId);
-        optionalGame.ifPresent(player::setGame);
-        return playerRepository.save(player);
+      return playerRepository.save(player);
     }
 
     public List<Player> getAllPlayers() {

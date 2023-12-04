@@ -1,5 +1,8 @@
 package com.example.ItProject.dto;
 
+import lombok.Getter;
+
+@Getter
 public class ColorDTO {
     private int red;
     private int green;
@@ -12,24 +15,12 @@ public class ColorDTO {
         this.blue = blue;
     }
 
-    public int getRed() {
-        return red;
-    }
-
     public void setRed(int red) {
         this.red = red;
     }
 
-    public int getGreen() {
-        return green;
-    }
-
     public void setGreen(int green) {
         this.green = green;
-    }
-
-    public int getBlue() {
-        return blue;
     }
 
     public void setBlue(int blue) {

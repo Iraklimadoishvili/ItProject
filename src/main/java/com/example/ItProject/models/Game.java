@@ -23,6 +23,8 @@ public class Game {
     private List<Player> players;
 
     @ElementCollection
+    @Column(name = "cell_value")
+    @CollectionTable(name = "game_board",joinColumns = @JoinColumn(name ="game_id"))
     @Getter
     private List<String> board;
 

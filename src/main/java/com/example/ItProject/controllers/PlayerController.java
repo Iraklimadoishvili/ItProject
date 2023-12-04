@@ -26,9 +26,9 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    @PostMapping("/{gameId}/add")
-    public ResponseEntity<Player> addPlayer(@RequestBody PlayerDTO playerDTO, @PathVariable Long gameId) {
-        Player addedPlayer = playerService.addPlayer(playerDTO, gameId);
+    @PostMapping("/add")
+    public ResponseEntity<Player> addPlayer(@RequestBody PlayerDTO playerDTO) {
+        Player addedPlayer = playerService.addPlayer(playerDTO);
         return new ResponseEntity<>(addedPlayer, HttpStatus.CREATED);
     }
 

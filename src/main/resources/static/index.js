@@ -20,7 +20,7 @@ function handleInputChange() {
 
 
 
-function savePlayerName(playerName, gameId) {
+function savePlayerName(playerName) {
     const color = generateRandomColor();
     const timeSpent = Math.floor(Math.random() * 101);
 

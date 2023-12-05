@@ -39,8 +39,9 @@ public class Player {
     private String color;
 
 
-@JsonIgnore
-@ManyToOne
+
+@Getter
+@ManyToOne(fetch = FetchType.LAZY)
 @JoinColumn(name = "game_id")
     private Game game;
 
@@ -68,10 +69,6 @@ public class Player {
         return colorDTO.getRed() + "," + colorDTO.getGreen() + "," + colorDTO.getBlue();
     }
 
-   @JsonIgnore
-    public Game getGame() {
-        return game;
-    }
 
     public void setGame(Game game) {
         this.game = game;

@@ -1,10 +1,10 @@
 package com.example.ItProject.models;
 
-import com.example.ItProject.models.Player;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -18,15 +18,14 @@ public class Game {
     @Getter
     private Long id;
 
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Getter
     private List<Player> players;
 
-    @ElementCollection
-    @Column(name = "cell_value")
-    @CollectionTable(name = "game_board",joinColumns = @JoinColumn(name ="game_id"))
-    @Getter
-    private List<String> board;
+  @Getter
+  @Setter
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Cell> cells;
 
     @Column(name = "board_size")
     @Getter
@@ -52,9 +51,6 @@ public class Game {
         this.players = players;
     }
 
-    public void setBoard(List<String> board) {
-        this.board = board;
-    }
 
     public void setBoardSize(int size) {
         this.boardSize = size;
@@ -79,4 +75,6 @@ public class Game {
     public void setWinner(String winner) {
         this.winner = winner;
     }
+
+
 }

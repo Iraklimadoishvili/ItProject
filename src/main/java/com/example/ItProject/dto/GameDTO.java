@@ -14,7 +14,7 @@ public class GameDTO {
     private List<PlayerDTO> players;
 
     @Setter
-    private List<String> board;
+    private List<List<String>> board;
 
     @Setter
     private boolean isGameOver;
@@ -32,7 +32,7 @@ public class GameDTO {
     public GameDTO(){
 
     }
-    public GameDTO(Long id, List<PlayerDTO> players, List<String> board, boolean isGameOver, int movesLeft, int currentPlayerIndex, String winner) {
+    public GameDTO(Long id, List<PlayerDTO> players, List<List<String>> board, boolean isGameOver, int movesLeft, int currentPlayerIndex, String winner) {
         this.id = id;
         this.players = players;
         this.board = board;
@@ -40,5 +40,12 @@ public class GameDTO {
         this.movesLeft = movesLeft;
         this.currentPlayerIndex = currentPlayerIndex;
         this.winner = winner;
+    }
+
+
+
+    public GameDTO(Long id, List<List<String>> board) {
+        this.id = id;
+        this.board = board;
     }
 }

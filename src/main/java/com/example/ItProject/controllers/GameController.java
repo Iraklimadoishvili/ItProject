@@ -1,11 +1,13 @@
 package com.example.ItProject.controllers;
 
+import com.example.ItProject.models.Cell;
 import com.example.ItProject.models.Game;
 import com.example.ItProject.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/games")
@@ -29,13 +31,13 @@ public class GameController {
 
 
     @PostMapping("/create")
-    public Long createNewGame(){
+    public List<Cell> createNewGame(){
         return gameService.createNewGame();
     }
 
     @PostMapping("/{gameId}/makeMove")
-    public void makeMove(@PathVariable Long gameId,@RequestParam int row,@RequestParam int column){
-        gameService.makeMove(gameId,row,column);
+    public void makeMove(@PathVariable Long gameId, @RequestParam int row, @RequestParam int column){
+        gameService.makeMove(gameId, row, column);
     }
 
     @GetMapping("/{gameId}")
@@ -44,12 +46,12 @@ public class GameController {
     }
 
     @DeleteMapping("/delete/{id}")
-
     public void deleteGameById(@PathVariable Long id){
-     gameService.deleteGameById(id);
+        gameService.deleteGameById(id);
     }
-@DeleteMapping("/delete")
+
+    @DeleteMapping("/delete")
     public void deleteAll(){
         gameService.deleteAll();
-}
+    }
 }

@@ -1,44 +1,83 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const battleground = document.querySelector('.battleground');
+    const gameContainer = document.querySelector('.game-container');
+    let gameId;
 
-    // Fetch board data from the server
-    fetch('/games/create', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ gridSize: 20 })
-    })
-        .then(response => response.json())
-        .then(data => {
-            renderBoard(data.board);
+
+    function createNewGame() {
+        fetch('/games/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         })
-        .catch(error => {
-            console.error('Error creating game:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                gameId = data;
+
+
+                renderBoard([]);
+            })
+            .catch(error => {
+                console.error('Error creating game:', error);
+            });
+    }
+
+    createNewGame();
+
 
     function renderBoard(boardData) {
-        if (Array.isArray(boardData) && boardData.length > 0) {
-            battleground.innerHTML = '';
+        gameContainer.innerHTML = '';
 
-            boardData.forEach(row => {
-                const rowElement = document.createElement('div');
-                rowElement.classList.add('row');
 
-                row.forEach(cell => {
-                    const cellElement = document.createElement('div');
-                    cellElement.classList.add('cell');
 
-                    // Add content or styling to the cell based on cell data
-                    cellElement.textContent = cell; // Example: Display the cell content as text
+        boardData.forEach((row, rowIndex) => {
+            const rowElement = document.createElement('div');
+            rowElement.classList.add('row');
 
-                    rowElement.appendChild(cellElement);
-                });
+            row.forEach((cell, columnIndex) => {
+                const cellElement = document.createElement('div');
+                cellElement.classList.add('cell');
+                cellElement.dataset.row = rowIndex;
+                cellElement.dataset.column = columnIndex;
+                cellElement.textContent = cell;
 
-                battleground.appendChild(rowElement);
+                rowElement.appendChild(cellElement);
             });
-        } else {
-            console.error('Board data is undefined or empty!');
-        }
+
+            gameContainer.appendChild(rowElement);
+        });
+
     }
+
+    // Event delegation for handling cell clicks
+    gameContainer.addEventListener('click', (event) => {
+        const clickedCell = event.target;
+        if (clickedCell.classList.contains('cell')) {
+            const row = clickedCell.dataset.row;
+            const column = clickedCell.dataset.column;
+
+            fetch(`/games/${gameId}/makeMove?row=${row}&column=${column}`, {
+                method: 'POST'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(updatedData => {
+
+                    renderBoard(updatedData);
+                })
+                .catch(error => {
+                    console.error('Error making move:', error);
+                });
+        }
+    });
 });

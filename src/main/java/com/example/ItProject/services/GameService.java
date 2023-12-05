@@ -122,7 +122,7 @@ public class GameService {
     }
 
     private boolean checkLine(List<List<String>> board, int row, int column, String symbol) {
-        // Check horizontally
+
         int count = 0;
         for (int c = 0; c < board.size(); c++) {
             if (board.get(row).get(c).equals(symbol)) {

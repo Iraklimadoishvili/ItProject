@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameId;
 
 
+
     function createNewGame() {
         fetch('/games/create', {
             method: 'POST',
@@ -18,10 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(data => {
                 console.log(data);
-                gameId = data;
+                 gameId = data.gameId;
 
-
-                renderBoard([]);
+                renderBoard(data.size);
             })
             .catch(error => {
                 console.error('Error creating game:', error);
@@ -30,38 +30,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     createNewGame();
 
-
-    function renderBoard(boardData) {
+    function refreshBoard(row,column,value,boardSize) {
         gameContainer.innerHTML = '';
-
-
-
-        boardData.forEach((row, rowIndex) => {
+        for (let i = 0; i < boardSize; i++) {
+            let rowIndex = i;
             const rowElement = document.createElement('div');
             rowElement.classList.add('row');
-
-            row.forEach((cell, columnIndex) => {
+            for (let j = 0; j < boardSize; j++) {
+                let columnIndex = j;
                 const cellElement = document.createElement('div');
                 cellElement.classList.add('cell');
                 cellElement.dataset.row = rowIndex;
                 cellElement.dataset.column = columnIndex;
-                cellElement.textContent = cell;
-
+                if(i == row && j == column){
+                    cellElement.dataset.value = value;
+                }
                 rowElement.appendChild(cellElement);
-            });
+                gameContainer.appendChild(rowElement);
 
-            gameContainer.appendChild(rowElement);
-        });
+
+            }
+
+        }
 
     }
 
-    // Event delegation for handling cell clicks
+
+
+    function renderBoard(boardSize) {
+        gameContainer.innerHTML = '';
+        for (let i = 0; i < boardSize; i++) {
+            let rowIndex = i;
+            let value = "X";
+            const rowElement = document.createElement('div');
+            rowElement.classList.add('row');
+            for (let j = 0; j < boardSize; j++) {
+                let columnIndex = j;
+                const cellElement = document.createElement('div');
+                cellElement.classList.add('cell');
+                cellElement.dataset.row = rowIndex;
+                cellElement.dataset.column = columnIndex;
+                cellElement.dataset.value = value;
+                rowElement.appendChild(cellElement);
+                gameContainer.appendChild(rowElement);
+            }
+
+        }
+
+    }
+
+
     gameContainer.addEventListener('click', (event) => {
         const clickedCell = event.target;
         if (clickedCell.classList.contains('cell')) {
             const row = clickedCell.dataset.row;
             const column = clickedCell.dataset.column;
-
+           console.log("row",row,"column",column,"gameid",gameId)
             fetch(`/games/${gameId}/makeMove?row=${row}&column=${column}`, {
                 method: 'POST'
             })
@@ -69,11 +93,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    return response.json();
+                    console.log(response);
+                    return JSON.parse('{"row":2,"column": 5,"value":"X"}'
+                )
+
+
+
                 })
                 .then(updatedData => {
 
-                    renderBoard(updatedData);
+                    refreshBoard(updatedData.row,updatedData.column,updatedData.value,20);
                 })
                 .catch(error => {
                     console.error('Error making move:', error);

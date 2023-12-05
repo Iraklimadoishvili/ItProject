@@ -1,5 +1,6 @@
 package com.example.ItProject.controllers;
 
+import com.example.ItProject.dto.NewGameDTO;
 import com.example.ItProject.models.Cell;
 import com.example.ItProject.models.Game;
 import com.example.ItProject.services.GameService;
@@ -31,7 +32,7 @@ public class GameController {
 
 
     @PostMapping("/create")
-    public List<Cell> createNewGame(){
+    public NewGameDTO createNewGame(){
         return gameService.createNewGame();
     }
 

@@ -1,5 +1,6 @@
 package com.example.ItProject.services;
 
+import com.example.ItProject.dto.NewGameDTO;
 import com.example.ItProject.models.Cell;
 import com.example.ItProject.models.Game;
 import com.example.ItProject.repositories.CellRepository;
@@ -27,17 +28,16 @@ public class GameService {
         this.cellRepository = cellRepository;
     }
 
-    public List<Cell> createNewGame() {
+    public NewGameDTO createNewGame() {
         return createNewGameWithSize(20);
     }
 
-    public List<Cell> createNewGameWithSize(int size) {
+    public NewGameDTO createNewGameWithSize(int size) {
         Game newGame = new Game();
         newGame.setBoardSize(size);
         initializeBoard(newGame, size);
-
-        Game savedGame = gameRepository.save(newGame);
-        return savedGame.getCells();
+       Game savedGame = gameRepository.save(newGame);
+        return new NewGameDTO(savedGame.getId(),size);
     }
 
     public void makeMove(Long gameId, int row, int column) {

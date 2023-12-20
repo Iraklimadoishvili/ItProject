@@ -1,6 +1,7 @@
 package com.example.ItProject.services;
 
-import com.example.ItProject.dto.NewGameDTO;
+import com.example.ItProject.dto.BoardDTO;
+import com.example.ItProject.dto.GameDTO;
 import com.example.ItProject.models.Cell;
 import com.example.ItProject.models.Game;
 import com.example.ItProject.repositories.CellRepository;
@@ -18,29 +19,30 @@ import java.util.Optional;
 public class GameService {
 
     private final GameRepository gameRepository;
-    private final PlayerRepository playerRepository;
-
     private final CellRepository cellRepository;
     @Autowired
-    public GameService(GameRepository gameRepository,PlayerRepository playerRepository,CellRepository cellRepository) {
+    public GameService(GameRepository gameRepository,CellRepository cellRepository) {
         this.gameRepository = gameRepository;
-        this.playerRepository = playerRepository;
         this.cellRepository = cellRepository;
     }
 
-    public NewGameDTO createNewGame() {
+    public List<Cell> getGameStateByGameId (Long gameId){
+        return cellRepository.findByGameId(gameId);
+    }
+
+    public BoardDTO createNewGame() {
         return createNewGameWithSize(20);
     }
 
-    public NewGameDTO createNewGameWithSize(int size) {
+    public BoardDTO createNewGameWithSize(int size) {
         Game newGame = new Game();
         newGame.setBoardSize(size);
         initializeBoard(newGame, size);
        Game savedGame = gameRepository.save(newGame);
-        return new NewGameDTO(savedGame.getId(),size);
+        return new BoardDTO(savedGame.getId(),size,savedGame.getCells());
     }
 
-    public void makeMove(Long gameId, int row, int column) {
+    public BoardDTO makeMove(Long gameId, int row, int column, String turn) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new EntityNotFoundException("Game not found"));
 
@@ -52,25 +54,21 @@ public class GameService {
         if (targetCell.isPresent()) {
             Cell cell = targetCell.get();
             if (cell.getValue().isEmpty()) {
-                cell.setValue("X");
-
-
+                cell.setValue(turn);
                 cellRepository.save(cell);
                 gameRepository.save(game);
 
-                int movesLeft = game.getMovesLeft();
-
-                if (checkWinCondition(convertCellsToBoard(cells, game.getBoardSize()), row, column, "X")) {
+                if (checkWinCondition(convertCellsToBoard(cells, game.getBoardSize()), turn)) {
                     game.setIsGameOver(true);
-                    game.setWinner("Player X wins!");
-                } else if (movesLeft == 0) {
-                    game.setIsGameOver(true);
-                    game.setWinner("It's a tie!");
-                }
-
-
-                if (movesLeft % 20 == 0 && movesLeft > 0) {
-                    increaseBoardSize(gameId);
+                    game.setWinner("Player " + turn + " wins!");
+                } else {
+                    int movesLeft = game.getMovesLeft();
+                    if (movesLeft == 0) {
+                        game.setIsGameOver(true);
+                        game.setWinner("It's a tie!");
+                    } else if (movesLeft % 20 == 0) {
+                        increaseBoardSize(gameId);
+                    }
                 }
             } else {
                 throw new IllegalArgumentException("Invalid move: cell already occupied!");
@@ -78,9 +76,11 @@ public class GameService {
         } else {
             throw new IllegalArgumentException("Invalid move: cell not found!");
         }
+        return new BoardDTO(game.getId(), game.getBoardSize(), game.getCells());
     }
 
-    private List<List<String>> convertCellsToBoard(List<Cell> cells, int boardSize) {
+
+    public List<List<String>> convertCellsToBoard(List<Cell> cells, int boardSize) {
         List<List<String>> board = new ArrayList<>();
         for (int i = 0; i < boardSize; i++) {
             List<String> row = new ArrayList<>();
@@ -111,7 +111,7 @@ public class GameService {
         game.setCells(cells);
     }
 
-    private void increaseBoardSize(Long gameId) {
+    public void increaseBoardSize(Long gameId) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new EntityNotFoundException("Game not found"));
 
@@ -121,71 +121,72 @@ public class GameService {
         gameRepository.save(game);
     }
 
-    private boolean checkLine(List<List<String>> board, int row, int column, String symbol) {
-
-        int count = 0;
-        for (int c = 0; c < board.size(); c++) {
-            if (board.get(row).get(c).equals(symbol)) {
-                count++;
-                if (count == 5) {
-                    return true;
-                }
-            } else {
-                count = 0;
-            }
-        }
-
-
-        count = 0;
-        for (int r = 0; r < board.size(); r++) {
-            if (board.get(r).get(column).equals(symbol)) {
-                count++;
-                if (count == 5) {
-                    return true;
-                }
-            } else {
-                count = 0;
-            }
-        }
-
-
-
-        return false;
-    }
-    private boolean checkDiagonals(List<List<String>> board, int row, int column, String symbol) {
+    public boolean checkWinCondition(List<List<String>> board, String turn) {
         int size = board.size();
+        int consecutiveCount = 0;
 
-        int count = 0;
+        // Check rows and columns
         for (int i = 0; i < size; i++) {
-            if (row + i < size && column + i < size && board.get(row + i).get(column + i).equals(symbol)) {
-                count++;
-                if (count == 5) {
-                    return true;
+            consecutiveCount = 0;
+            for (int j = 0; j < size; j++) {
+                if (board.get(i).get(j).equals(turn)) {
+                    consecutiveCount++;
+                    if (consecutiveCount == 5) {
+                        return true;
+                    }
+                } else {
+                    consecutiveCount = 0;
                 }
-            } else {
-                break;
+            }
+
+            consecutiveCount = 0;
+            for (int j = 0; j < size; j++) {
+                if (board.get(j).get(i).equals(turn)) {
+                    consecutiveCount++;
+                    if (consecutiveCount == 5) {
+                        return true;
+                    }
+                } else {
+                    consecutiveCount = 0;
+                }
             }
         }
 
 
-        count = 0;
-        for (int i = 0; i < size; i++) {
-            if (row + i < size && column - i >= 0 && board.get(row + i).get(column - i).equals(symbol)) {
-                count++;
-                if (count == 5) {
-                    return true;
+        for (int i = 0; i <= size - 5; i++) {
+            for (int j = 0; j <= size - 5; j++) {
+
+                consecutiveCount = 0;
+                for (int k = 0; k < 5; k++) {
+                    if (board.get(i + k).get(j + k).equals(turn)) {
+                        consecutiveCount++;
+                        if (consecutiveCount == 5) {
+                            return true;
+
+                        }
+                    } else {
+                        consecutiveCount = 0;
+                    }
                 }
-            } else {
-                break;
+
+
+                consecutiveCount = 0;
+                for (int k = 0; k < 5; k++) {
+                    if (board.get(i + k).get(size - 1 - j - k).equals(turn)) {
+                        consecutiveCount++;
+                        if (consecutiveCount == 5) {
+                            return true;
+                        }
+                    } else {
+                        consecutiveCount = 0;
+                    }
+                }
             }
         }
 
         return false;
     }
 
-    private boolean checkWinCondition(List<List<String>> board, int row, int column, String symbol) {
-        return checkLine(board, row, column, symbol) || checkDiagonals(board, row, column, symbol);
-    }
 
     public Game getGameById(Long gameId){
         return gameRepository.findById(gameId).orElseThrow(() -> new EntityNotFoundException("Game not found"));

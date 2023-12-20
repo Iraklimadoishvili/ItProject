@@ -6,20 +6,21 @@
     <link rel="stylesheet" th:href="@{/game.css}">
 </head>
 <body>
-
+ <p id="gameTimer"></p>
 <div class="player-info">
     <div>
-        <h2>Player 1:</h2>
-        <p id="player1Name"></p>
+        <h2>Player 1:  <p id="player1Name" style="align-items: center">   <p id="player1Timer"></p></p></h2>
+
     </div>
     <div>
-        <h2>Player 2:</h2>
-        <p id="player2Name"></p>
+        <h2>Player 2: <p id="player2Name"></p>   <p id="player2Timer"></p></h2>
+
     </div>
 </div>
 <div class="game-container">
 
 </div>
 <script th:src="@{/game.js}"></script>
+<script th:src ="@{/index.js}"></script>
 </body>
 </html>

@@ -4,10 +4,13 @@ const readyBtn1 = document.getElementById('readyPlayer1');
 const readyBtn2 = document.getElementById('readyPlayer2');
 const startBtn = document.getElementById('startGame');
 
+let player1StartTime = null;
+let player2StartTime = null;
 Player1.addEventListener('input', handleInputChange);
 Player2.addEventListener('input', handleInputChange);
 
  let gameId;
+
 function handleInputChange() {
     const player1name = Player1.value.trim();
     const player2name = Player2.value.trim();
@@ -20,9 +23,8 @@ function handleInputChange() {
 
 
 
-function savePlayerName(playerName) {
+function savePlayerName(playerName,timeSpent) {
     const color = generateRandomColor();
-    const timeSpent = Math.floor(Math.random() * 101);
 
     const playerData = {
         name: playerName,
@@ -39,7 +41,8 @@ function savePlayerName(playerName) {
     })
         .then(response => {
             if (response.ok) {
-                console.log('Player name saved successfully!');
+
+                console.log('Player name saved successfully!',response.timeSpent);
             } else {
                 console.error('Failed to save player name!');
             }
@@ -74,10 +77,15 @@ startBtn.addEventListener('click', () => {
             }
         })
         .then(data => {
-            console.log('Game ID:', data.id);
-            gameId = data.id;
+            console.log('Game ID:', data.gameId);
+            gameId = data.gameId;
 
-            window.location.href = 'games/game';
+           sessionStorage.setItem("Player1" , Player1.value.trim());
+           sessionStorage.setItem("Player2" , Player2.value.trim());
+
+                window.location.href = `/games/${gameId}`;
+
+            console.log(gameId);
         })
         .catch(error => {
             console.error('Error creating game:', error);
@@ -85,10 +93,14 @@ startBtn.addEventListener('click', () => {
 });
 
 readyBtn1.addEventListener('click', () => {
-    savePlayerName(Player1.value.trim());
+    const player1EndTime = new Date();
+    const timeSpentPlayer1 = player1EndTime - player1StartTime;
+    savePlayerName(Player1.value.trim(),timeSpentPlayer1);
 });
 
 readyBtn2.addEventListener('click', () => {
-    savePlayerName(Player2.value.trim());
+    const player2EndTime = new Date();
+    const timeSpentPlayer2 = player2EndTime - player2StartTime;
+    savePlayerName(Player2.value.trim(),timeSpentPlayer2);
 });
 

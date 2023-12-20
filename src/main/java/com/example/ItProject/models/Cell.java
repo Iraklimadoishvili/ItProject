@@ -1,5 +1,6 @@
 package com.example.ItProject.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -11,8 +12,12 @@ public class Cell {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id", referencedColumnName = "id")
+    @Getter
     private Game game;
 
     @Column(name = "row_index")

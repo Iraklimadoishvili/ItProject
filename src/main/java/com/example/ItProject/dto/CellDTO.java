@@ -2,34 +2,27 @@ package com.example.ItProject.dto;
 
 public class CellDTO {
 
-    private int row;
-    private int column;
+    private int rowIndex;
+    private int columnIndex;
     private String value;
 
     public CellDTO() {
     }
 
-    public CellDTO(int row, int column, String value) {
-        this.row = row;
-        this.column = column;
-        this.value = value;
+    public int getRowIndex() {
+        return rowIndex;
     }
 
-
-    public int getRow() {
-        return row;
+    public void setRowIndex(int rowIndex) {
+        this.rowIndex = rowIndex;
     }
 
-    public void setRow(int row) {
-        this.row = row;
+    public int getColumnIndex() {
+        return columnIndex;
     }
 
-    public int getColumn() {
-        return column;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
+    public void setColumnIndex(int columnIndex) {
+        this.columnIndex = columnIndex;
     }
 
     public String getValue() {

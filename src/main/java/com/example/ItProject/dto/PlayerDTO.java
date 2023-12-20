@@ -8,32 +8,39 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@Getter
-public class PlayerDTO {
 
+public class PlayerDTO {
+    @Getter
     @Setter
     private Long id;
 
+    @Getter
     @Setter
     @NotEmpty(message = "შეიყვანეთ სახელი!")
     private String name;
 
+    @Getter
     @Setter
   private ColorDTO color;
 
+    @Getter
       @Setter
-    private int timeSpent;
+    private Long timeSpent;
 
 
       public PlayerDTO (){
 
       }
 
-    public PlayerDTO(Long id, String name, ColorDTO color, int timeSpent) {
+    public PlayerDTO(Long id, String name, ColorDTO color, Long timeSpent) {
         this.id = id;
         this.name = name;
         this.color = color;
         this.timeSpent = timeSpent;
 
     }
+
+
+
+
 }

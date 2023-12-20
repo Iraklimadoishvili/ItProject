@@ -1,13 +1,9 @@
 package com.example.ItProject.services;
 
-import com.example.ItProject.dto.GameDTO;
 import com.example.ItProject.dto.PlayerDTO;
-import com.example.ItProject.models.Game;
 import com.example.ItProject.models.Player;
 import com.example.ItProject.repositories.GameRepository;
 import com.example.ItProject.repositories.PlayerRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.action.internal.EntityActionVetoException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +22,11 @@ public class PlayerService {
 
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
+    }
+
+
+    public List<String> getByName(){
+        return playerRepository.findAllPlayerNames();
     }
 
     public Player addPlayer(@NotNull PlayerDTO playerDTO) {
@@ -55,6 +56,7 @@ public class PlayerService {
         }
         return null;
     }
+
 
     public void deletePlayer(Long id) {
         playerRepository.deleteById(id);

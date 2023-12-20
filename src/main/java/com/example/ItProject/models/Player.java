@@ -33,15 +33,16 @@ public class Player {
     @Getter
     @Setter
     @Column(name = "time_spent")
-    private Integer timeSpent;
+    private Long timeSpent;
 
    @Column(name = "color")
     private String color;
 
 
 
+@Setter
 @Getter
-@ManyToOne(fetch = FetchType.LAZY)
+@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 @JoinColumn(name = "game_id")
     private Game game;
 
@@ -70,9 +71,6 @@ public class Player {
     }
 
 
-    public void setGame(Game game) {
-        this.game = game;
-    }
 }
 
 

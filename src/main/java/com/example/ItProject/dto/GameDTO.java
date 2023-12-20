@@ -1,5 +1,6 @@
 package com.example.ItProject.dto;
 
+import jakarta.persistence.ElementCollection;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ public class GameDTO {
     private List<PlayerDTO> players;
 
     @Setter
-    private List<List<String>> board;
+    private List<CellDTO> cells;
 
     @Setter
     private boolean isGameOver;
@@ -32,10 +33,10 @@ public class GameDTO {
     public GameDTO(){
 
     }
-    public GameDTO(Long id, List<PlayerDTO> players, List<List<String>> board, boolean isGameOver, int movesLeft, int currentPlayerIndex, String winner) {
+    public GameDTO(Long id, List<PlayerDTO> players, List<CellDTO> cells, boolean isGameOver, int movesLeft, int currentPlayerIndex, String winner) {
         this.id = id;
         this.players = players;
-        this.board = board;
+        this.cells = cells;
         this.isGameOver = isGameOver;
         this.movesLeft = movesLeft;
         this.currentPlayerIndex = currentPlayerIndex;
@@ -44,8 +45,8 @@ public class GameDTO {
 
 
 
-    public GameDTO(Long id, List<List<String>> board) {
+    public GameDTO(Long id,List<CellDTO> cells) {
         this.id = id;
-        this.board = board;
+        this.cells= cells;
     }
 }

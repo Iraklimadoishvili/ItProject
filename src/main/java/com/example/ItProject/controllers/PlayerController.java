@@ -4,6 +4,7 @@ package com.example.ItProject.controllers;
 import com.example.ItProject.dto.GameDTO;
 import com.example.ItProject.dto.PlayerDTO;
 import com.example.ItProject.models.Player;
+import com.example.ItProject.repositories.PlayerRepository;
 import com.example.ItProject.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,4 +61,5 @@ public class PlayerController {
         playerService.deletePlayer(id);
         return ResponseEntity.noContent().build();
     }
+
 }

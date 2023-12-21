@@ -4,6 +4,7 @@ import com.example.ItProject.dto.BoardDTO;
 import com.example.ItProject.dto.GameDTO;
 import com.example.ItProject.models.Cell;
 import com.example.ItProject.models.Game;
+import com.example.ItProject.models.Player;
 import com.example.ItProject.repositories.CellRepository;
 import com.example.ItProject.repositories.GameRepository;
 import com.example.ItProject.repositories.PlayerRepository;
@@ -201,4 +202,6 @@ public class GameService {
     public void deleteAll(){
         gameRepository.deleteAll();
     }
+
+
 }

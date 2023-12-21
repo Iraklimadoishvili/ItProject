@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,23 @@ public class PlayerController {
     @Autowired
     public PlayerController(PlayerService playerService) {
         this.playerService = playerService;
+    }
+
+    @GetMapping("/leaderboard")
+    public ModelAndView leaderboardPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("leaderboard");
+
+        List<PlayerDTO> leaderboardData = playerService.getLeaderboardData();
+        modelAndView.addObject("leaderboardData", leaderboardData);
+
+        return modelAndView;
+    }
+    @GetMapping("/leaderboard/json")
+    @ResponseBody
+    public ResponseEntity<List<PlayerDTO>> leaderboardDataJSON() {
+        List<PlayerDTO> leaderboardData = playerService.getLeaderboardData();
+        return ResponseEntity.ok(leaderboardData);
     }
 
     @PostMapping("/add")
@@ -62,4 +80,10 @@ public class PlayerController {
         return ResponseEntity.noContent().build();
     }
 
+
+//    @GetMapping("/leaderboard")
+//    public ResponseEntity<List<PlayerDTO>> getLeaderboardData() {
+//        List<PlayerDTO> leaderboardData = playerService.getLeaderboardData();
+//        return ResponseEntity.ok(leaderboardData);
+//    }
 }

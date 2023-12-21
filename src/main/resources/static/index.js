@@ -3,7 +3,6 @@ const Player2 = document.getElementById('player2');
 const readyBtn1 = document.getElementById('readyPlayer1');
 const readyBtn2 = document.getElementById('readyPlayer2');
 const startBtn = document.getElementById('startGame');
-
 let player1StartTime = null;
 let player2StartTime = null;
 Player1.addEventListener('input', handleInputChange);
@@ -25,10 +24,12 @@ function handleInputChange() {
 
 function savePlayerName(playerName,timeSpent) {
     const color = generateRandomColor();
+    const timeSpentInSeconds = Math.floor(timeSpent / 1000);
+
 
     const playerData = {
         name: playerName,
-        timeSpent: timeSpent,
+        timeSpent: timeSpentInSeconds,
         color: color
     };
 
@@ -80,10 +81,10 @@ startBtn.addEventListener('click', () => {
             console.log('Game ID:', data.gameId);
             gameId = data.gameId;
 
-           sessionStorage.setItem("Player1" , Player1.value.trim());
-           sessionStorage.setItem("Player2" , Player2.value.trim());
+            sessionStorage.setItem('Player1', Player1.value.trim());
+            sessionStorage.setItem('Player2', Player2.value.trim());
 
-                window.location.href = `/games/${gameId}`;
+            window.location.href = `/games/${gameId}`;
 
             console.log(gameId);
         })
@@ -95,12 +96,13 @@ startBtn.addEventListener('click', () => {
 readyBtn1.addEventListener('click', () => {
     const player1EndTime = new Date();
     const timeSpentPlayer1 = player1EndTime - player1StartTime;
-    savePlayerName(Player1.value.trim(),timeSpentPlayer1);
+
+    savePlayerName(Player1.value.trim(), timeSpentPlayer1);
 });
 
 readyBtn2.addEventListener('click', () => {
     const player2EndTime = new Date();
     const timeSpentPlayer2 = player2EndTime - player2StartTime;
-    savePlayerName(Player2.value.trim(),timeSpentPlayer2);
-});
 
+    savePlayerName(Player2.value.trim(), timeSpentPlayer2);
+});

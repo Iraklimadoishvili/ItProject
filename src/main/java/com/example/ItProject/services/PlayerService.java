@@ -64,4 +64,8 @@ public class PlayerService {
     public void deletePlayer(){
         playerRepository.deleteAll();
     }
+
+    public List<PlayerDTO> getLeaderboardData() {
+        return playerRepository.findLeaderboardData();
+    }
 }

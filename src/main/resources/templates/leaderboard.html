@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leaderboard</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>Leaderboard</h1>
+
+<table id="leaderboardTable">
+    <thead>
+    <tr>
+        <th>Player Name</th>
+        <th>Time Spent</th>
+    </tr>
+    </thead>
+    <tbody id="leaderboardBody">
+
+    </tbody>
+</table>
+
+<script th:src="@{/leaderboard.js}"></script>
+</body>
+</html>

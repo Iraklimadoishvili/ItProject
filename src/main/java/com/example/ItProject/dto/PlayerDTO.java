@@ -40,6 +40,10 @@ public class PlayerDTO {
 
     }
 
+    public PlayerDTO(String name,Long timeSpent){
+          this.name =name;
+          this.timeSpent = timeSpent;
+    }
 
 
 
